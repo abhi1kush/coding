@@ -64,6 +64,34 @@ func (t *TrieNode) Contains(key string) bool {
 	return true
 }
 
+func deleteRec(currNode *TrieNode, str string, index int) {
+	if index >= len(str) || nil == currNode {
+		return
+	}
+
+	deleteRec(currNode.children[charToIndex(rune(str[index]))], str, index+1)
+
+	if len(str)-1 == index && currNode.children[charToIndex(rune(str[index]))] != nil {
+		currNode.children[charToIndex(rune(str[index]))].isEndOfWord = false
+	}
+
+	if currNode.children[charToIndex(rune(str[index]))].isLeaf() {
+		currNode.children[charToIndex(rune(str[index]))] = nil
+	}
+}
+
+func (t *TrieNode) Delete(str string) {
+	if nil == t {
+		return
+	}
+
+	if !t.Contains(str) {
+		return
+	}
+
+	deleteRec(t, str, 0)
+}
+
 // AutoCompelete: Returns an arrray of all possible autocompletion of a partial typed word.
 // Input Param
 // str string: partially typed string
@@ -84,7 +112,12 @@ func (t *TrieNode) AutoCompelete(str string, maxLen int) []string {
 }
 
 func (t *TrieNode) isLeaf() bool {
-	return len(t.children) == 0
+	for _, child := range t.children {
+		if child != nil {
+			return false
+		}
+	}
+	return true
 }
 
 func autoCompeleteRec(str string, t *TrieNode, result *[]string, currRecDetph int, maxLen int) {
