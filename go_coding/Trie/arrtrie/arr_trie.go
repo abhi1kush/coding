@@ -7,14 +7,6 @@ const (
 	FIRST_ALPHABET = 'a'
 )
 
-func charToIndex(ch rune) int32 {
-	return ch - FIRST_ALPHABET
-}
-
-func indexToChar(index int) string {
-	return fmt.Sprintf("%c", int(FIRST_ALPHABET+index))
-}
-
 type TrieNode struct {
 	value       any
 	children    [ALPHABET_SIZE]*TrieNode
@@ -45,6 +37,8 @@ func (t *TrieNode) Put(key string, val any) bool {
 	return isReplaced
 }
 
+// Get: Returns value stored in final node in walk of input key.
+// if key does not exist in trie then it returns false.
 func (t *TrieNode) Get(key string) any {
 	currNode := t
 	for _, ch := range key {
@@ -57,6 +51,7 @@ func (t *TrieNode) Get(key string) any {
 	return currNode.value
 }
 
+// Contains: Returns true if input key string exist in trie otherwise returns false.
 func (t *TrieNode) Contains(key string) bool {
 	currNode := t
 	for _, ch := range key {
@@ -69,6 +64,10 @@ func (t *TrieNode) Contains(key string) bool {
 	return true
 }
 
+// AutoCompelete: Returns an arrray of all possible autocompletion of a partial typed word.
+// Input Param
+// str string: partially typed string
+// maxLen int: maximum length bound for autocompleted words.
 func (t *TrieNode) AutoCompelete(str string, maxLen int) []string {
 	currNode := t
 	for _, ch := range str {
@@ -105,6 +104,7 @@ func autoCompeleteRec(str string, t *TrieNode, result *[]string, currRecDetph in
 	}
 }
 
+// LexoGraphicalSort: Returns all words stored in trie in lexographical order.
 func (t *TrieNode) LexoGraphicalSort() []string {
 	result := []string{}
 	lexoGraphicalSortRec("", t, &result)
@@ -124,4 +124,12 @@ func lexoGraphicalSortRec(str string, t *TrieNode, result *[]string) {
 	for i, child := range t.children {
 		lexoGraphicalSortRec(str+indexToChar(i), child, result)
 	}
+}
+
+func charToIndex(ch rune) int32 {
+	return ch - FIRST_ALPHABET
+}
+
+func indexToChar(index int) string {
+	return fmt.Sprintf("%c", int(FIRST_ALPHABET+index))
 }
