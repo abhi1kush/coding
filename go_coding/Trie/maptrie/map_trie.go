@@ -34,6 +34,8 @@ func (t *TrieNode) Put(key string, val any) bool {
 	return isReplaced
 }
 
+// Get: Returns value stored in final node in walk of input key.
+// if key does not exist in trie then it returns false.
 func (t *TrieNode) Get(key string) any {
 	currNode := t
 	for _, char := range key {
@@ -47,6 +49,7 @@ func (t *TrieNode) Get(key string) any {
 	return currNode.value
 }
 
+// Contains: Returns true if input key string exist in trie otherwise returns false.
 func (t *TrieNode) Contains(key string) bool {
 	currNode := t
 	for _, char := range key {
@@ -60,6 +63,10 @@ func (t *TrieNode) Contains(key string) bool {
 	return true
 }
 
+// AutoCompelete: Returns an arrray of all possible autocompletion of a partial typed word.
+// Input Param
+// str string: partially typed string
+// maxLen int: maximum length bound for autocompleted words.
 func (t *TrieNode) AutoCompelete(str string, maxLen int) []string {
 	currNode := t
 	for _, char := range str {

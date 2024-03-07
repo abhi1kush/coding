@@ -68,11 +68,11 @@ func deleteRec(currNode *TrieNode, str string, index int) {
 	if index >= len(str) || nil == currNode {
 		return
 	}
-
 	deleteRec(currNode.children[charToIndex(rune(str[index]))], str, index+1)
 
-	if len(str)-1 == index && currNode.children[charToIndex(rune(str[index]))] != nil {
-		currNode.children[charToIndex(rune(str[index]))].isEndOfWord = false
+	// Reached final node.
+	if len(str)-1 == index {
+		currNode.children[charToIndex(rune(str[index]))].SetIsEndOfWord(false)
 	}
 
 	if currNode.children[charToIndex(rune(str[index]))].isLeaf() {
@@ -80,12 +80,9 @@ func deleteRec(currNode *TrieNode, str string, index int) {
 	}
 }
 
+// Deletes key from trie.
 func (t *TrieNode) Delete(str string) {
-	if nil == t {
-		return
-	}
-
-	if !t.Contains(str) {
+	if nil == t || !t.Contains(str) {
 		return
 	}
 
@@ -166,3 +163,26 @@ func charToIndex(ch rune) int32 {
 func indexToChar(index int) string {
 	return fmt.Sprintf("%c", int(FIRST_ALPHABET+index))
 }
+
+func (t *TrieNode) SetIsEndOfWord(val bool) {
+	if t == nil {
+		return
+	}
+	t.isEndOfWord = val
+}
+
+// 1,1 1,2 1,3 1,4
+// 2,1 2,2 2,3 2,4
+// 3,1 3,2 3,3 3,4
+// 4,1 4,2 4,3 4,4
+
+//metting : 3,2
+// Boy (2,2)  ->3,2
+//      i-1,j ->i,j
+//     (3,1)  -> 3,2
+//      i,j-1 ->i,j
+
+// Girl (3, 3) -> 3,2
+//       i,j+1 -> i,j
+//      (4,2)  -> 3,2
+//       i+1,j -> i,j

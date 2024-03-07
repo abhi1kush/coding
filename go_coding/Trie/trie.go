@@ -8,6 +8,8 @@ type Trie interface {
 	Get(key string) any
 	// Contains: Returns true if input key string exist in trie otherwise returns false.
 	Contains(key string) bool
+	// Deletes key from trie.
+	Delete(key string)
 	// AutoCompelete: Returns an arrray of all possible autocompletion of a partial typed word.
 	// param str string: partially typed string
 	// param maxLen int: maximum length bound for autocompleted words.
